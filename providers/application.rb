@@ -17,12 +17,12 @@ action :deploy do
   end
 
   directory application_directory do
-    mode '0666'
+    mode '0777'
     action :create
   end
 
   file pid_file_path do
-    mode '0666'
+    mode '0777'
     action :touch
   end
 
@@ -64,7 +64,7 @@ def start_command
 end
 
 def stop_command
-  "start-stop-daemon --stop --pidfile #{pid_file_path} --exec #{startup_script} -- #{startup_args}"
+  "start-stop-daemon --stop --pidfile #{pid_file_path}"
 end
 
 def pid_file_path
