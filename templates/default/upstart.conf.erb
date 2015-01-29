@@ -6,13 +6,4 @@ stop on shutdown
 
 respawn
 
-exec sh -c "<%= @startup_script_path %>"
-
-post-start script
-    PID=`status app_name | egrep -oi '([0-9]+)$' | head -n1`
-    echo $PID > <%= @pid_file_path %>
-end script
-
-post-stop script
-    rm -f <%= @pid_file_path %>
-end script
+exec <%= @start_command %>
