@@ -10,9 +10,21 @@ action :deploy do
     command "unzip -o #{local_archive_path} -d #{application_directory}"
   end
 
-  file "#{application_directory}/bin/#{project_name}" do
+  startup_script_path = "#{application_directory}/bin/#{project_name}"
+  file startup_script_path do
     mode '0005'
     :touch
+  end
+
+  pid_file_path = "#{application_directory}/RUNNING_PID"
+  template "/etc/init/play_#{project_name}.conf" do
+    source 'upstart.conf.erb'
+    variables(
+        :project_name => project_name,
+        :startup_script_path => startup_script_path,
+        :pid_file_path => pid_file_path
+    )
+    action :create
   end
 end
 
