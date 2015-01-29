@@ -1,3 +1,5 @@
+include_recipe 'apt'
+
 apt_repository "webupd8team" do
   uri "http://ppa.launchpad.net/webupd8team/java/ubuntu"
   components ['main']
@@ -8,12 +10,17 @@ apt_repository "webupd8team" do
 end
 
 # could be improved to run only on update
-execute "accept-license" do
-  command "echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true"
+execute "accept-license-1" do
+  command "echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | \\sudo debconf-set-selections"
 end
 
-execute "set-selections" do
-  command "sudo /usr/bin/debconf-set-selections"
+#ubuntu 12
+execute "accept-license-2" do
+  command "echo debconf shared/accepted-oracle-license-v1-1 select true | \\sudo debconf-set-selections"
+end
+
+execute "accept-license-3" do
+  command "echo debconf shared/accepted-oracle-license-v1-1 seen true | \\sudo debconf-set-selections"
 end
 
 package "oracle-java8-installer" do
