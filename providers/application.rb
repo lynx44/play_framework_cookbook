@@ -11,7 +11,7 @@ action :deploy do
   end
 
   file "#{application_directory}/bin/#{project_name}" do
-    mode '0500'
+    mode '0005'
     :touch
   end
 end
