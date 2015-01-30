@@ -21,7 +21,7 @@ action :deploy do
     action :create
   end
 
-  file pid_file_path do
+  file pidfile_path do
     mode '0777'
     action :touch
   end
@@ -56,19 +56,23 @@ def startup_script
 end
 
 def startup_args
-  "-Dhttp.port=#{port}"
+  "-Dhttp.port=#{port} -Dpidfile.path=#{pidfile_path}"
 end
 
 def start_command
-  "start-stop-daemon --start --pidfile #{pid_file_path} --exec #{startup_script} -- #{startup_args}"
+  "start-stop-daemon --start --pidfile #{pidfile_path} --exec #{startup_script} -- #{startup_args}"
 end
 
 def stop_command
-  "start-stop-daemon --stop --pidfile #{pid_file_path}"
+  "start-stop-daemon --stop --pidfile #{pidfile_path}"
 end
 
-def pid_file_path
-  "#{application_directory}/RUNNING_PID"
+def pidfile_path
+  "/var/run/play_#{project_name}"
+end
+
+def remove_pidfile_command
+  "((ps -A | grep `cat #{pidfile_path}`) || rm -f #{pidfile_path}) || if [ ! -s #{pidfile_path} ] ; then rm #{pidfile_path}; fi"
 end
 
 def stop
