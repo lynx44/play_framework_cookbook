@@ -60,11 +60,11 @@ def startup_args
 end
 
 def start_command
-  "start-stop-daemon --start --pidfile #{pidfile_path} --exec #{startup_script} -- #{startup_args}"
+  "#{startup_script} #{startup_args}"
 end
 
 def stop_command
-  "start-stop-daemon --stop --pidfile #{pidfile_path}"
+  "sudo kill `cat #{pidfile_path}`"
 end
 
 def pidfile_path
@@ -85,6 +85,7 @@ def stop
 
   execute 'stop existing instance' do
     command stop_command
+    only_if {::File.exist? pidfile_path }
     returns [0,1]
   end
 end
