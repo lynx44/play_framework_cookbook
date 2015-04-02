@@ -31,7 +31,8 @@ action :deploy do
     cookbook 'play_framework'
     variables(
         :project_name => project_name,
-        :start_command => start_command
+        :start_command => start_command,
+        :pidfile_path => pidfile_path
     )
     action :create
   end
@@ -56,7 +57,8 @@ def startup_script
 end
 
 def startup_args
-  "-Dhttp.port=#{port} -Dpidfile.path=#{pidfile_path}"
+  additional_args = @new_resource.arguments.map { |k, v| "-D#{k}=#{v}" }.join(' ')
+  "-Dhttp.port=#{port} -Dpidfile.path=#{pidfile_path} #{additional_args}"
 end
 
 def start_command
