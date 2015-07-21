@@ -32,7 +32,8 @@ action :deploy do
     variables(
         :project_name => project_name,
         :start_command => start_command,
-        :pidfile_path => pidfile_path
+        :pidfile_path => pidfile_path,
+        :application_directory => application_directory
     )
     action :create
   end
