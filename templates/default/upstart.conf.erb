@@ -10,6 +10,8 @@ stop on (stopping networking)
 respawn
 respawn limit 0 60
 
+chdir <%= @application_directory %>
+
 script
     exec <%= @start_command %>
 end script
