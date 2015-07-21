@@ -1,13 +1,15 @@
 #!upstart
 description "<%= @project_name %>"
 
-start on startup
-stop on shutdown
+start on runlevel [2345]
+start on (started networking)
+
+stop on runlevel [016]
+stop on (stopping networking)
 
 respawn
-post-stop script
-    exec sleep 10
-    exec sudo rm <%= @pidfile_path %>
-end script
+respawn limit 0 60
 
-exec <%= @start_command %>
+script
+    exec <%= @start_command %>
+end script
