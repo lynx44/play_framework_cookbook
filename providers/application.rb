@@ -48,8 +48,8 @@ action :stop do
 end
 
 def start
-  execute 'start website' do
-    command "nohup #{start_command} &"
+  service project_name do
+    action :start
   end
 end
 
@@ -66,10 +66,6 @@ def start_command
   "#{startup_script} #{startup_args}"
 end
 
-def stop_command
-  "sudo kill `cat #{pidfile_path}`"
-end
-
 def pidfile_path
   "/var/run/play_#{project_name}"
 end
@@ -79,17 +75,8 @@ def remove_pidfile_command
 end
 
 def stop
-  # running_pid_path = "#{application_directory}/RUNNING_PID"
-  # execute 'kill existing instance' do
-  #   command "sudo kill `cat #{running_pid_path}`"
-  #   only_if {::File.exist? running_pid_path }
-  #   returns [0,1]
-  # end
-
-  execute 'stop existing instance' do
-    command stop_command
-    only_if {::File.exist? pidfile_path }
-    returns [0,1]
+  service project_name do
+    action :stop
   end
 end
 
