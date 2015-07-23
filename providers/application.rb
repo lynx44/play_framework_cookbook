@@ -48,8 +48,9 @@ action :stop do
 end
 
 def start
-  service project_name do
-    action :start
+  execute "start service" do
+    command "sudo service play_#{project_name} start"
+    action :run
   end
 end
 
@@ -75,8 +76,9 @@ def remove_pidfile_command
 end
 
 def stop
-  service project_name do
-    action :stop
+  execute "stop service" do
+    command "sudo service play_#{project_name} stop"
+    action :run
   end
 end
 
